@@ -30,6 +30,7 @@
 //   updateBook(bookId, formData);
 
 import { useState } from "react";
+import { BACKEND_PORT } from "../config";
 
 const EditBook = () => {
   const bookid = window.location.pathname.split("/")[1];
@@ -54,7 +55,7 @@ const EditBook = () => {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/book/${formData.book_number}`,
+        `http://${BACKEND_PORT}/book/${formData.book_number}`,
         {
           method: "PUT",
           headers: {

@@ -74,6 +74,7 @@
 
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { BACKEND_PORT } from "../config";
 
 const AddBook = () => {
   const param = useParams();
@@ -99,7 +100,7 @@ const AddBook = () => {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/${formData.store_number}/books`,
+        `http://${BACKEND_PORT}/${formData.store_number}/books`,
         {
           method: "POST",
           headers: {

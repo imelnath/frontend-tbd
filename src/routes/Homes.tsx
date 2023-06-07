@@ -81,6 +81,7 @@
 // export default Home;
 
 import { useEffect, useState } from "react";
+import { BACKEND_PORT } from "../config";
 
 interface Stores {
   city: string;
@@ -93,7 +94,7 @@ const Home = () => {
   const [data, setData] = useState<Stores[]>([]);
 
   const getData = async () => {
-    const response = await fetch("http://127.0.0.1:5000/store");
+    const response = await fetch(`http://${BACKEND_PORT}/store`);
     const jsonData = await response.json();
     setData(jsonData);
     console.log(jsonData);

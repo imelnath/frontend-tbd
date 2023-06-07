@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { BACKEND_PORT } from "../config";
 import axios from "axios";
 
 interface Book {
@@ -11,12 +12,13 @@ interface Book {
 }
 
 const Store = () => {
+  const [query, setQuery] = useState<string>("");
   const param = useParams();
   const store_number = param.store_number;
   const [data, setData] = useState<Book[]>([]);
 
   const getBook = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/${store_number}/books`);
+    const res = await fetch(`http://${BACKEND_PORT}/${store_number}/books`);
     const jsonData = await res.json();
     console.log(jsonData);
     setData(jsonData.items);
@@ -32,6 +34,14 @@ const Store = () => {
         console.error("Error deleting post:", error);
       });
   };
+
+  const handleQuery = async (book_number: number) => {
+    setQuery(
+      `SELECT b.book_number, b.book_name, b.publication_year, b.pages, b.publisher_name FROM book b WHERE b.book_number=${book_number}`
+    );
+    console.log(query);
+  };
+
   useEffect(() => {
     getBook();
   }, []);
@@ -41,7 +51,10 @@ const Store = () => {
       <div>
         {data.map((book) => (
           <div key={book.book_number}>
-            <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div
+              className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+              onClick={(e) => handleQuery(book.book_number)}
+            >
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 {book.book_name}
               </h5>
@@ -99,6 +112,19 @@ const Store = () => {
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
           Add book
+        </a>
+      </div>
+      <div className="flex justify-end">
+        <a
+          href="#"
+          className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        >
+          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            SQL Query
+          </h5>
+          <p className="font-normal text-gray-700 dark:text-gray-400">
+            {query}
+          </p>
         </a>
       </div>
     </div>
